@@ -1,2 +1,1 @@
-export * from "./providerNotInitializedError";
-export * from "./isWindowAvailable";
+export * from './providerNotInitializedError';
