@@ -2,14 +2,10 @@ module.exports = {
   roots: ['<rootDir>/src'],
   collectCoverageFrom: ['src/**/tests/*.{test.ts,test.tsx,spec.tsx,spec.ts}'],
   coveragePathIgnorePatterns: [],
-  setupFiles: ['./config/setupJest.js'],
-  setupFilesAfterEnv: ['./src/setupTests.ts'],
   testEnvironment: 'jsdom',
   modulePaths: ['<rootDir>/src'],
   transform: {
-    '^.+\\.(ts|js|tsx|jsx)$': ['@swc/jest'],
-    '^.+\\.svg$': '<rootDir>/config/svgTransform.js',
-    '^.+\\.(png|jpg|webp)$': '<rootDir>/config/pngTransform.js'
+    '^.+\\.(ts|js|tsx|jsx)$': ['@swc/jest']
   },
   transformIgnorePatterns: ['node_modules/(^.+\\\\.(ts|js)$)'],
   testMatch: ['**/src/**/?(*.)+(spec|test|bgTest).ts?(x)'],
@@ -27,10 +23,6 @@ module.exports = {
     'web.tsx',
     'json',
     'node'
-  ],
-  watchPlugins: [
-    'jest-watch-typeahead/filename',
-    'jest-watch-typeahead/testname'
   ],
   moduleDirectories: ['node_modules', 'src'],
   bail: 1,
