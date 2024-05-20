@@ -10,6 +10,7 @@
         "sourceMap": true,
         "allowJs": true,
         "strict": true,
+        "baseUrl": "./src",
         "strictPropertyInitialization": true,
         "strictNullChecks": true,
         "skipLibCheck": true,
