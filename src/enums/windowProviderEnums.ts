@@ -1,4 +1,4 @@
-export enum CrossWindowProviderRequestEnums {
+export enum WindowProviderRequestEnums {
   signTransactionsRequest = "SIGN_TRANSACTIONS_REQUEST",
   guardTransactionsRequest = "GUARD_TRANSACTIONS_REQUEST",
   signMessageRequest = "SIGN_MESSAGE_REQUEST",
@@ -9,7 +9,7 @@ export enum CrossWindowProviderRequestEnums {
   finalizeResetStateRequest = "FINALIZE_RESET_STATE_REQUEST",
 }
 
-export enum CrossWindowProviderResponseEnums {
+export enum WindowProviderResponseEnums {
   handshakeResponse = "HANDSHAKE_RESPONSE",
   guardTransactionsResponse = "GUARD_TRANSACTIONS_RESPONSE",
   loginResponse = "LOGIN_RESPONSE",
@@ -19,11 +19,4 @@ export enum CrossWindowProviderResponseEnums {
   signMessageResponse = "SIGN_MESSAGE_RESPONSE",
   noneResponse = "NONE_RESPONSE",
   resetStateResponse = "RESET_STATE_RESPONSE",
-}
-
-export enum SignMessageStatusEnum {
-  pending = "pending",
-  failed = "failed",
-  signed = "signed",
-  cancelled = "cancelled",
 }

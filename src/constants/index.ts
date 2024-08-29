@@ -1,1 +1,2 @@
-export * from "./crossWindowProviderConstants";
+export * from "./windowProviderConstants";
+export * from "./browserConstants";
