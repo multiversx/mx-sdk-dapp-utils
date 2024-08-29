@@ -1,2 +1,2 @@
-export * from "./crossWindowProviderTypes";
+export * from "./windowProviderTypes";
 export * from "./nullable";

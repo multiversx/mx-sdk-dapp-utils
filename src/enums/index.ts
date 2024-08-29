@@ -1,1 +1,2 @@
-export * from "./crossWindowProviderEnums";
+export * from "./windowProviderEnums";
+export * from "./signMessageStatusEnum";
