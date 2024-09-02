@@ -7,13 +7,13 @@ export interface IDAppProviderOptions {
 }
 
 export interface IDAppProviderBase {
-  login?(options?: IDAppProviderOptions): Promise<string | boolean | {
+  login?(options?: IDAppProviderOptions): Promise<{
     address: string;
     signature: string;
     multisig?: string;
     impersonate?: string;
     [key: string]: unknown;
-  }>;
+  } | null>;
   logout(options?: IDAppProviderOptions): Promise<boolean>;
   signTransaction(
     transaction: Transaction,
