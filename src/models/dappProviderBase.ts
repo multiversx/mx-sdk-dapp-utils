@@ -6,15 +6,18 @@ export interface IDAppProviderOptions {
   [key: string]: any;
 }
 
+export interface IDAppProviderAccount {
+  address: string;
+  signature?: string;
+  multisig?: string;
+  impersonate?: string;
+  [key: string]: unknown;
+}
+
 export interface IDAppProviderBase {
-  login?(options?: IDAppProviderOptions): Promise<{
-    address: string;
-    signature: string;
-    multisig?: string;
-    impersonate?: string;
-    [key: string]: unknown;
-  } | null>;
+  login?(options?: IDAppProviderOptions): Promise<IDAppProviderAccount | null>;
   logout(options?: IDAppProviderOptions): Promise<boolean>;
+  getAccount(): Promise<IDAppProviderAccount | null>;
   signTransaction(
     transaction: Transaction,
     options?: IDAppProviderOptions
