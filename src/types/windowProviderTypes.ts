@@ -9,12 +9,12 @@ export type ReplyWithPostMessageObjectType = {
   [WindowProviderResponseEnums.handshakeResponse]: boolean;
   [WindowProviderResponseEnums.loginResponse]: {
     address: string;
+    signature: string;
     accessToken?: string;
     /**
      * used in De-Fi wallet extension as wallet name
      * */
     name?: string;
-    signature?: string;
     /**
      * contract address for alternate multisig login
      * */
