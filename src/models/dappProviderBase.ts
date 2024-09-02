@@ -17,7 +17,7 @@ export interface IDAppProviderAccount {
 export interface IDAppProviderBase {
   login?(options?: IDAppProviderOptions): Promise<IDAppProviderAccount | null>;
   logout(options?: IDAppProviderOptions): Promise<boolean>;
-  getAccount(): Promise<IDAppProviderAccount | null>;
+  getAccount(): IDAppProviderAccount | null;
   signTransaction(
     transaction: Transaction,
     options?: IDAppProviderOptions
