@@ -15,10 +15,10 @@
   "author": "MultiversX",
   "license": "GPL-3.0-or-later",
   "devDependencies": {
-    "@multiversx/sdk-core": ">= 12.1.0",
+    "@multiversx/sdk-core": ">= 13.5.0",
     "typescript": "5.4.3"
   },
   "peerDependencies": {
-    "@multiversx/sdk-core": ">= 12.1.0"
+    "@multiversx/sdk-core": ">= 13.5.0"
   }
 }

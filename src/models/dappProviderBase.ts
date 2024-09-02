@@ -1,5 +1,5 @@
-import type { Transaction, SignableMessage } from "@multiversx/sdk-core";
-import { Nullable } from "../types";
+import type { Transaction, Message } from "@multiversx/sdk-core";
+import type { Nullable } from "../types";
 
 export interface IDAppProviderOptions {
   callbackUrl?: string;
@@ -27,7 +27,7 @@ export interface IDAppProviderBase {
     options?: IDAppProviderOptions
   ): Promise<Nullable<Transaction[]>>;
   signMessage(
-    message: SignableMessage,
+    messageToSign: string,
     options?: IDAppProviderOptions
-  ): Promise<Nullable<SignableMessage>>;
+  ): Promise<Nullable<Message>>;
 }
