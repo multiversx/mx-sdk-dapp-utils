@@ -1,6 +1,6 @@
 {
   "name": "@multiversx/sdk-dapp-utils",
-  "version": "0.2.0-alpha.3",
+  "version": "0.2.0-alpha.4",
   "description": "SDK for DApp utilities",
   "main": "out/index.js",
   "types": "out/index.d.js",
