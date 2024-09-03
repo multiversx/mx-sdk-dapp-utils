@@ -8,6 +8,7 @@ export interface IDAppProviderOptions {
 
 export interface IDAppProviderAccount {
   address: string;
+  name?: string;
   signature?: string;
   multisig?: string;
   impersonate?: string;
@@ -18,6 +19,8 @@ export interface IDAppProviderBase {
   login?(options?: IDAppProviderOptions): Promise<IDAppProviderAccount | null>;
   logout(options?: IDAppProviderOptions): Promise<boolean>;
   getAccount(): IDAppProviderAccount | null;
+  isInitialized(): boolean;
+  isConnected?(): boolean;
   signTransaction(
     transaction: Transaction,
     options?: IDAppProviderOptions
