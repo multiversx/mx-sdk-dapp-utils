@@ -2,13 +2,11 @@ import type { Transaction, Message } from "@multiversx/sdk-core";
 import type { Nullable } from "../types";
 
 export interface IDAppProviderOptions {
-  callbackUrl?: string;
-  [key: string]: any;
+  [key: PropertyKey]: unknown;
 }
 
 export interface IDAppProviderAccount {
   address: string;
-  name?: string;
   signature?: string;
   multisig?: string;
   impersonate?: string;
@@ -19,6 +17,7 @@ export interface IDAppProviderBase {
   login?(options?: IDAppProviderOptions): Promise<IDAppProviderAccount | null>;
   logout(options?: IDAppProviderOptions): Promise<boolean>;
   getAccount(): IDAppProviderAccount | null;
+  setAccount(account: IDAppProviderAccount): void;
   isInitialized(): boolean;
   isConnected?(): boolean;
   signTransaction(
