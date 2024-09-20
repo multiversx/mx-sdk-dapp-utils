@@ -8,6 +8,7 @@
     "out/**/*"
   ],
   "scripts": {
+    "publish-verdaccio": "npm unpublish --registry http://localhost:4873 @multiversx/sdk-dapp-utils@1.0.0 && rm -rf out && yarn compile && npm publish --registry http://localhost:4873",
     "compile": "tsc -p tsconfig.json",
     "pretest": "npm run compile",
     "prepare": "npm run compile"
