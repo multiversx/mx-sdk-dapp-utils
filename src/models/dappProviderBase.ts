@@ -29,7 +29,7 @@ export interface IDAppProviderBase {
     options?: IDAppProviderOptions
   ): Promise<Nullable<Transaction[]>>;
   signMessage(
-    messageToSign: string,
+    messageToSign: Message,
     options?: IDAppProviderOptions
   ): Promise<Nullable<Message>>;
 }
