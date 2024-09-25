@@ -1,20 +1,25 @@
-import type { Transaction, SignableMessage } from "@multiversx/sdk-core";
-import { Nullable } from "../types";
+import type { Transaction, Message } from "@multiversx/sdk-core";
+import type { Nullable } from "../types";
 
 export interface IDAppProviderOptions {
-  callbackUrl?: string;
-  [key: string]: any;
+  [key: PropertyKey]: unknown;
+}
+
+export interface IDAppProviderAccount {
+  address: string;
+  signature?: string;
+  multisig?: string;
+  impersonate?: string;
+  [key: string]: unknown;
 }
 
 export interface IDAppProviderBase {
-  login?(options?: IDAppProviderOptions): Promise<string | boolean | {
-    address: string;
-    signature: string;
-    multisig?: string;
-    impersonate?: string;
-    [key: string]: unknown;
-  }>;
+  login?(options?: IDAppProviderOptions): Promise<IDAppProviderAccount | null>;
   logout(options?: IDAppProviderOptions): Promise<boolean>;
+  getAccount(): IDAppProviderAccount | null;
+  setAccount(account: IDAppProviderAccount): void;
+  isInitialized(): boolean;
+  isConnected?(): boolean;
   signTransaction(
     transaction: Transaction,
     options?: IDAppProviderOptions
@@ -24,7 +29,7 @@ export interface IDAppProviderBase {
     options?: IDAppProviderOptions
   ): Promise<Nullable<Transaction[]>>;
   signMessage(
-    message: SignableMessage,
+    messageToSign: Message,
     options?: IDAppProviderOptions
-  ): Promise<Nullable<SignableMessage>>;
+  ): Promise<Nullable<Message>>;
 }

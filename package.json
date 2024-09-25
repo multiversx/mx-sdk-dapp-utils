@@ -1,6 +1,6 @@
 {
   "name": "@multiversx/sdk-dapp-utils",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "SDK for DApp utilities",
   "main": "out/index.js",
   "types": "out/index.d.js",
@@ -8,6 +8,7 @@
     "out/**/*"
   ],
   "scripts": {
+    "publish-verdaccio": "npm unpublish --registry http://localhost:4873 @multiversx/sdk-dapp-utils@1.0.0 && rm -rf out && yarn compile && npm publish --registry http://localhost:4873",
     "compile": "tsc -p tsconfig.json",
     "pretest": "npm run compile",
     "prepare": "npm run compile"
@@ -15,10 +16,10 @@
   "author": "MultiversX",
   "license": "GPL-3.0-or-later",
   "devDependencies": {
-    "@multiversx/sdk-core": ">= 12.1.0",
+    "@multiversx/sdk-core": ">= 13.5.0",
     "typescript": "5.4.3"
   },
   "peerDependencies": {
-    "@multiversx/sdk-core": ">= 12.1.0"
+    "@multiversx/sdk-core": ">= 13.5.0"
   }
 }
