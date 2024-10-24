@@ -1,6 +1,6 @@
 {
   "name": "@multiversx/sdk-dapp-utils",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "SDK for DApp utilities",
   "main": "out/index.js",
   "types": "out/index.d.js",
@@ -16,10 +16,10 @@
   "author": "MultiversX",
   "license": "GPL-3.0-or-later",
   "devDependencies": {
-    "@multiversx/sdk-core": ">= 13.5.0",
+    "@multiversx/sdk-core": ">= 13.12.0",
     "typescript": "5.4.3"
   },
   "peerDependencies": {
-    "@multiversx/sdk-core": ">= 13.5.0"
+    "@multiversx/sdk-core": ">= 13.12.0"
   }
 }
