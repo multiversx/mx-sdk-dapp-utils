@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- [Added tests setup and prettier](https://github.com/multiversx/mx-sdk-dapp-utils/pull/8)
 - [Added logic from formatAmount UI component](https://github.com/multiversx/mx-sdk-dapp-utils/pull/7)
 
 ## [[v1.0.2]](https://github.com/multiversx/mx-sdk-dapp-utils/pull/6)] - 2024-12-18
