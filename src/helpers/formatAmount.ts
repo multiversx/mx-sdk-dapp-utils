@@ -7,21 +7,21 @@ import { pipe } from './pipe';
 BigNumber.config({ ROUNDING_MODE: BigNumber.ROUND_FLOOR });
 
 export interface FormatAmountType {
-  input: string;
+  addCommas?: boolean;
   decimals?: number;
   digits?: number;
+  input: string;
   showIsLessThanDecimalsLabel?: boolean;
   showLastNonZeroDecimal?: boolean;
-  addCommas?: boolean;
 }
 
 export function formatAmount({
-  input,
+  addCommas = false,
   decimals = DECIMALS,
   digits = DIGITS,
-  showLastNonZeroDecimal = true,
+  input,
   showIsLessThanDecimalsLabel = false,
-  addCommas = false
+  showLastNonZeroDecimal = true
 }: FormatAmountType) {
   if (!stringIsInteger(input, false)) {
     throw new Error('Invalid input');
@@ -43,7 +43,6 @@ export function formatAmount({
           .amountAsBigInteger.shiftedBy(-decimals)
           .toFixed(decimals)
       )
-
       // format
       .then((current) => {
         const bnBalance = new BigNumber(current);
@@ -51,6 +50,7 @@ export function formatAmount({
         if (bnBalance.isZero()) {
           return ZERO;
         }
+
         const balance = bnBalance.toString(10);
         const [integerPart, decimalPart] = balance.split('.');
         const bNdecimalPart = new BigNumber(decimalPart || 0);
@@ -79,7 +79,6 @@ export function formatAmount({
         const formattedBalance = pipe(balance)
           .if(addCommas)
           .then(formatted)
-
           .if(Boolean(shownDecimalsAreZero))
           .then((current) => {
             const integerPartZero = new BigNumber(integerPart).isZero();
@@ -103,7 +102,6 @@ export function formatAmount({
 
             return `${numericPart}.${decimalSide}`;
           })
-
           .if(Boolean(!shownDecimalsAreZero && decimalPart))
           .then((current) => {
             const [numericPart] = current.split('.');
@@ -127,14 +125,20 @@ export function formatAmount({
 
             return `${numericPart}.${decimalSide}`;
           })
-
           .valueOf();
 
-        return formattedBalance;
+        const parts = formattedBalance.split('.');
+        const hasNoDecimals = parts.length === 1;
+        const isNotZero = formattedBalance !== ZERO;
+
+        if (digits > 0 && hasNoDecimals && isNotZero) {
+          parts.push(ZERO.repeat(digits));
+        }
+
+        return parts.join('.');
       })
       .if(isNegative)
       .then((current) => `-${current}`)
-
       .valueOf()
   );
 }
