@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-- [Added sdk-core as dependency](https://github.com/multiversx/mx-sdk-dapp-utils/pull/10)
+- [Removed formatAmount.ts](https://github.com/multiversx/mx-sdk-dapp-utils/pull/10)
 
 ## [[v1.0.3]](https://github.com/multiversx/mx-sdk-dapp-utils/pull/9)] - 2025-01-17
 
