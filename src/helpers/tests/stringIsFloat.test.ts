@@ -16,6 +16,7 @@ describe('stringIsFloat tests', () => {
   it('allows decimal numbers with zeros', () => {
     expect(stringIsFloat('0.1')).toBe(true);
     expect(stringIsFloat('0.001')).toBe(true);
+    expect(stringIsFloat('0.0010000')).toBe(true);
   });
   it('allows large decimal places', () => {
     expect(stringIsFloat('999999999999999999999.123456789012345678')).toBe(
