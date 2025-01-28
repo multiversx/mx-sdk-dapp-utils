@@ -7,8 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [[v1.0.5]](https://github.com/multiversx/mx-sdk-dapp-utils/pull/13)] - 2025-01-28
+## [[v1.0.5]](https://github.com/multiversx/mx-sdk-dapp-utils/pull/12)] - 2025-01-28
 
+- [Added parseAmount.ts](https://github.com/multiversx/mx-sdk-dapp-utils/pull/13)
 - [Added back formatAmount.ts](https://github.com/multiversx/mx-sdk-dapp-utils/pull/12)
 
 ## [[v1.0.4]](https://github.com/multiversx/mx-sdk-dapp-utils/pull/11)] - 2025-01-20
