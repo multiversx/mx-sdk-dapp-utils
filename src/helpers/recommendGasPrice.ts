@@ -4,6 +4,7 @@ interface RecommendGasPriceParams {
   ppu: number;
 }
 
+// reference to original file: https://github.com/multiversx/mx-chain-go/blob/MX-16624-sandbox/txcache/sandbox/sandbox.js#L1
 export function recommendGasPrice({
   transactionDataLength,
   transactionGasLimit,
