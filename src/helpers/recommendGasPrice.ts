@@ -1,15 +1,15 @@
-interface RecommendGasPriceParams {
+export type RecommendGasPriceParamsType = {
   transactionDataLength: number;
   transactionGasLimit: number;
   ppu: number;
-}
+};
 
 // reference to original file: https://github.com/multiversx/mx-chain-go/blob/MX-16624-sandbox/txcache/sandbox/sandbox.js#L1
 export function recommendGasPrice({
   transactionDataLength,
   transactionGasLimit,
   ppu
-}: RecommendGasPriceParams) {
+}: RecommendGasPriceParamsType) {
   const MIN_GAS_LIMIT = 50_000;
   const MIN_GAS_PRICE = 1_000_000_000;
   const GAS_PER_DATA_BYTE = 1_500;
