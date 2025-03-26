@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- [Upgraded sdk-core dependency to v14](https://github.com/multiversx/mx-sdk-dapp-utils/pull/16)
+
 ## [[v1.0.6]](https://github.com/multiversx/mx-sdk-dapp-utils/pull/15)] - 2025-03-17
 
 - [Added recommendGasPrice funcion](https://github.com/multiversx/mx-sdk-dapp-utils/pull/14)
