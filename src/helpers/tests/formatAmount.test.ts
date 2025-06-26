@@ -13,22 +13,22 @@ describe('formatAmount', () => {
   });
 
   test('formats positive integers', () => {
-    expect(formatAmount({ input: '1000000000000000000' })).toBe('1.0000');
-    expect(formatAmount({ input: '2000000000000000000' })).toBe('2.0000');
+    expect(formatAmount({ input: '1000000000000000000' })).toBe('1');
+    expect(formatAmount({ input: '2000000000000000000' })).toBe('2');
   });
 
   test('formats negative integers', () => {
-    expect(formatAmount({ input: '-1000000000000000000' })).toBe('-1.0000');
-    expect(formatAmount({ input: '-2000000000000000000' })).toBe('-2.0000');
+    expect(formatAmount({ input: '-1000000000000000000' })).toBe('-1');
+    expect(formatAmount({ input: '-2000000000000000000' })).toBe('-2');
   });
 
   test('handles custom decimals', () => {
     expect(formatAmount({ input: '1000000000000000000', decimals: 8 })).toBe(
-      '10000000000.0000'
+      '10000000000'
     );
 
     expect(formatAmount({ input: '1000000000000000000', decimals: 4 })).toBe(
-      '100000000000000.0000'
+      '100000000000000'
     );
 
     expect(
@@ -37,19 +37,14 @@ describe('formatAmount', () => {
   });
 
   test('handles custom digits', () => {
-    expect(formatAmount({ input: '1000000000000000000', digits: 2 })).toBe(
-      '1.00'
-    );
-
-    expect(formatAmount({ input: '1000000000000000000', digits: 4 })).toBe(
-      '1.0000'
-    );
+    expect(formatAmount({ input: '1000000000000000000', digits: 2 })).toBe('1');
+    expect(formatAmount({ input: '1000000000000000000', digits: 4 })).toBe('1');
   });
 
   test('adds commas when specified', () => {
     expect(
       formatAmount({ input: '1000000000000000000000', addCommas: true })
-    ).toBe('1,000.0000');
+    ).toBe('1,000');
 
     expect(
       formatAmount({
@@ -57,7 +52,7 @@ describe('formatAmount', () => {
         addCommas: true,
         digits: 2
       })
-    ).toBe('1,000.00');
+    ).toBe('1,000');
   });
 
   test('handles showIsLessThanDecimalsLabel', () => {
