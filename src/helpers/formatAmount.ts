@@ -127,15 +127,7 @@ export function formatAmount({
           })
           .valueOf();
 
-        const parts = formattedBalance.split('.');
-        const hasNoDecimals = parts.length === 1;
-        const isNotZero = formattedBalance !== ZERO;
-
-        if (digits > 0 && hasNoDecimals && isNotZero) {
-          parts.push(ZERO.repeat(digits));
-        }
-
-        return parts.join('.');
+        return formattedBalance;
       })
       .if(isNegative)
       .then((current) => `-${current}`)
