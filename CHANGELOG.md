@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [[v2.0.2]](https://github.com/multiversx/mx-sdk-dapp-utils/pull/21) - 2025-06-27
+
+- [Refactor formatAmount function and update tests for improved input handling](https://github.com/multiversx/mx-sdk-dapp-utils/pull/20)
+
 ## [[v2.0.1]](https://github.com/multiversx/mx-sdk-dapp-utils/pull/19) - 2025-06-26
 
 - [Improved `formatAmount` logic for better handling of negative values, custom decimals, and digit formatting](https://github.com/multiversx/mx-sdk-dapp-utils/pull/18)
