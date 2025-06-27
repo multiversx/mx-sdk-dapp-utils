@@ -67,11 +67,11 @@ export interface FormatAmountProps {
   /**
    * Controls the primary decimal formatting behavior:
    *
-   * - **`true`** (default): Shows the maximum of either all non-zero decimal places OR `digits` places.
-   *   When decimals are present, ensures minimum width while preserving precision.
+   * - **`true`** (default): When decimals exist, always pad to at least `digits` decimal places.
+   *   If there are more significant decimal places than `digits`, show all of them.
    *
-   * - **`false`**: Pads or trims to exactly `digits` decimal places (fixed-width formatting).
-   *   This prioritizes consistent formatting over precision.
+   * - **`false`**: When decimals exist, always pad to exactly `digits` decimal places.
+   *   Truncate if there are more decimal places than `digits`.
    *
    * @default true
    * @example
@@ -80,12 +80,12 @@ export interface FormatAmountProps {
    * // showLastNonZeroDecimal=false: "1.1234"      (exactly 4 digits)
    *
    * // Input: "1100000000000000000" (1.1 EGLD), digits=4
-   * // showLastNonZeroDecimal=true:  "1.1000"      (less than 4 digits, pad to 4)
+   * // showLastNonZeroDecimal=true:  "1.1000"      (pad to 4 digits minimum)
    * // showLastNonZeroDecimal=false: "1.1000"      (exactly 4 digits)
    *
    * // Input: "1000000000000000000" (1 EGLD), digits=4
-   * // showLastNonZeroDecimal=true:  "1"           (integer, no decimals added)
-   * // showLastNonZeroDecimal=false: "1"           (integer, no decimals added)
+   * // showLastNonZeroDecimal=true:  "1"           (integer, no decimals to pad)
+   * // showLastNonZeroDecimal=false: "1"           (integer, no decimals to pad)
    */
   showLastNonZeroDecimal?: boolean;
 }
@@ -218,7 +218,7 @@ export function formatAmount({
         ? LocalBigNumber(`0.${zeros}`).toFormat(digits)
         : `0.${zeros}`;
     } else {
-      // Case: showLastNonZeroDecimal=true - show max(all non-zero decimals, digits)
+      // Case: showLastNonZeroDecimal=true - always pad to at least digits places when decimals exist
       const trimmedDecimal = decimalPart.replace(/0+$/, '');
       const finalDecimal =
         trimmedDecimal.length >= digits
@@ -234,9 +234,11 @@ export function formatAmount({
     }
   } else {
     // Normal case: we have significant digits within the display precision
+    const trimmedDecimal = decimalPart.replace(/0+$/, '');
+
     if (showLastNonZeroDecimal) {
-      // Show the maximum of (all non-zero decimals, digits) - precision with minimum width
-      const trimmedDecimal = decimalPart.replace(/0+$/, '');
+      // Always pad to at least `digits` places when decimals exist
+      // If more decimals than digits, show them all
       const finalDecimal =
         trimmedDecimal.length >= digits
           ? trimmedDecimal
@@ -249,7 +251,8 @@ export function formatAmount({
         ? LocalBigNumber(`${integerPart}.${finalDecimal}`).toFormat()
         : `${integerPart}.${finalDecimal}`;
     } else {
-      // Pad or trim to exactly `digits` places (fixed width formatting)
+      // Always pad to exactly `digits` places when decimals exist
+      // Truncate if more decimals than digits
       let processedDecimal = decimalPart.substring(0, digits);
       const paddingNeeded = digits - processedDecimal.length;
       if (paddingNeeded > 0) {

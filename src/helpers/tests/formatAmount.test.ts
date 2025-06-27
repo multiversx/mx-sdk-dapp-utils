@@ -145,6 +145,58 @@ describe('formatAmount', () => {
     ).toBe('1');
   });
 
+  test('always pads trailing zeros when decimals exist', () => {
+    expect(
+      formatAmount({
+        input: '1100000000000000000', // 1.1 EGLD
+        showLastNonZeroDecimal: true,
+        digits: 4
+      })
+    ).toBe('1.1000');
+
+    expect(
+      formatAmount({
+        input: '1200000000000000000', // 1.2 EGLD
+        showLastNonZeroDecimal: true,
+        digits: 6
+      })
+    ).toBe('1.200000');
+
+    expect(
+      formatAmount({
+        input: '1100000000000000000', // 1.1 EGLD
+        showLastNonZeroDecimal: false,
+        digits: 4
+      })
+    ).toBe('1.1000');
+
+    expect(
+      formatAmount({
+        input: '1200000000000000000', // 1.2 EGLD
+        showLastNonZeroDecimal: false,
+        digits: 6
+      })
+    ).toBe('1.200000');
+  });
+
+  test('shows all decimals when showLastNonZeroDecimal is true and decimals exceed digits', () => {
+    expect(
+      formatAmount({
+        input: '1123456789000000000', // 1.123456789 EGLD
+        showLastNonZeroDecimal: true,
+        digits: 4
+      })
+    ).toBe('1.123456789');
+
+    expect(
+      formatAmount({
+        input: '1123456789000000000', // 1.123456789 EGLD
+        showLastNonZeroDecimal: true,
+        digits: 2
+      })
+    ).toBe('1.123456789');
+  });
+
   test('handles very small amounts with less-than label', () => {
     expect(
       formatAmount({
@@ -212,5 +264,23 @@ describe('formatAmount', () => {
         digits: 6
       })
     ).toBe('1.500000');
+  });
+
+  test('does not trim trailing zeros when showLastNonZeroDecimal is false and digits are specified', () => {
+    expect(
+      formatAmount({
+        input: '1100000000000000000', // 1.1 EGLD
+        showLastNonZeroDecimal: false,
+        digits: 4
+      })
+    ).toBe('1.1000');
+
+    expect(
+      formatAmount({
+        input: '1230000000000000000', // 1.23 EGLD
+        showLastNonZeroDecimal: false,
+        digits: 6
+      })
+    ).toBe('1.230000');
   });
 });
