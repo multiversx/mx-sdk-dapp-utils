@@ -2,6 +2,7 @@ import { TokenTransfer } from '@multiversx/sdk-core';
 import BigNumber from 'bignumber.js';
 import { DECIMALS, DIGITS, ZERO } from '../constants';
 import { stringIsInteger } from './stringIsInteger';
+import { pipe } from './pipe';
 
 /**
  * Configuration options for formatting blockchain token amounts.
@@ -36,6 +37,7 @@ export interface FormatAmountPropsType {
    *
    * @default DIGITS (typically 4)
    * @example
+   * // For 1.23456789 EGLD (18 decimals): "1234567890000000000"
    * // digits=4 with showLastNonZeroDecimal=false: "1.2345"
    * // digits=4 with showLastNonZeroDecimal=true: "1.23456789"
    */
@@ -47,8 +49,9 @@ export interface FormatAmountPropsType {
    *
    * @default false
    * @example
-   * // false: "1000.5"
-   * // true: "1,000.5"
+   * // For 1000.5 EGLD (18 decimals, showLastNonZeroDecimal: true): "1000500000000000000000"
+   * // false: "1000"
+   * // true: "1,000"
    */
   addCommas?: boolean;
 
@@ -58,7 +61,7 @@ export interface FormatAmountPropsType {
    *
    * @default false
    * @example
-   * // For very small amounts with digits=4:
+   * // For 0.000000000000000001 EGLD (18 decimals, showIsLessThanDecimalsLabel: true): "1"
    * // false: "0.0000"
    * // true: "<0.0001"
    */
@@ -75,17 +78,21 @@ export interface FormatAmountPropsType {
    *
    * @default true
    * @example
-   * // Input: "1123456789000000000" (1.123456789 EGLD), digits=4
+   * // For 1.123456789 EGLD (18 decimals, digits=4): "1123456789000000000"
    * // showLastNonZeroDecimal=true:  "1.123456789" (more than 4 digits, show all)
    * // showLastNonZeroDecimal=false: "1.1234"      (exactly 4 digits)
    *
-   * // Input: "1100000000000000000" (1.1 EGLD), digits=4
-   * // showLastNonZeroDecimal=true:  "1.1000"      (pad to 4 digits minimum)
+   * // For 1.1 EGLD (18 decimals, digits=4): "1100000000000000000"
+   * // showLastNonZeroDecimal=true:  "1.1"         (pad to 4 digits minimum)
    * // showLastNonZeroDecimal=false: "1.1000"      (exactly 4 digits)
    *
-   * // Input: "1000000000000000000" (1 EGLD), digits=4
+   * // For 1 EGLD (18 decimals, digits=4): "1000000000000000000"
    * // showLastNonZeroDecimal=true:  "1"           (integer, no decimals to pad)
-   * // showLastNonZeroDecimal=false: "1"           (integer, no decimals to pad)
+   * // showLastNonZeroDecimal=false: "1.0000"      (integer, no decimals to pad)
+   *
+   * // For 1.0000005 EGLD (18 decimals, digits=4): "1000000500000000000"
+   * // showLastNonZeroDecimal=true:  "1.0000005"   (more than 4 digits, show all)
+   * // showLastNonZeroDecimal=false: "1.0000"      (exactly 4 digits)
    */
   showLastNonZeroDecimal?: boolean;
 }
@@ -117,6 +124,15 @@ export interface FormatAmountPropsType {
  * // Returns: "1.1234"
  *
  * @example
+ * // With precision control
+ * formatAmount({
+ *   input: "1123456789000000000",
+ *   showLastNonZeroDecimal: true,
+ *   digits: 4
+ * })
+ * // Returns: "1.123456789"
+ *
+ * @example
  * // With thousands separators
  * formatAmount({
  *   input: "1000000000000000000000",
@@ -143,10 +159,10 @@ export interface FormatAmountPropsType {
  * // Returns: "<0.0001"
  */
 export function formatAmount({
-  input,
+  addCommas = false,
   decimals = DECIMALS,
   digits = DIGITS,
-  addCommas = false,
+  input,
   showIsLessThanDecimalsLabel = false,
   showLastNonZeroDecimal = true
 }: FormatAmountPropsType) {
@@ -157,109 +173,146 @@ export function formatAmount({
   const LocalBigNumber = BigNumber.clone();
   LocalBigNumber.config({ ROUNDING_MODE: BigNumber.ROUND_FLOOR });
   const isNegative = LocalBigNumber(input).isNegative();
-  const modInput = isNegative ? input.substring(1) : input;
-  const decimalAmount = TokenTransfer.fungibleFromBigInteger(
-    '',
-    modInput,
-    decimals
-  )
-    .amountAsBigInteger.shiftedBy(-decimals)
-    .toFixed(decimals);
+  let modInput = input;
 
-  const bnBalance = LocalBigNumber(decimalAmount);
-
-  if (bnBalance.isZero()) {
-    return ZERO;
+  if (isNegative) {
+    // remove - at start of input
+    modInput = input.substring(1);
   }
 
-  const balance = bnBalance.toString(10);
-  const [integerPart, decimalPart = ''] = balance.split('.');
-  const bNdecimalPart = LocalBigNumber(decimalPart || 0);
+  return (
+    pipe(modInput as string)
+      // format
+      .then(() =>
+        TokenTransfer.fungibleFromBigInteger('', modInput as string, decimals)
+          .amountAsBigInteger.shiftedBy(-decimals)
+          .toFixed(decimals)
+      )
+      // format
+      .then((current) => {
+        const bnBalance = LocalBigNumber(current);
 
-  // Handle whole numbers (no decimal part or all zeros)
-  if (!decimalPart || bNdecimalPart.isZero()) {
-    const formattedInteger = addCommas
-      ? LocalBigNumber(integerPart).toFormat()
-      : integerPart;
-    return isNegative ? `-${formattedInteger}` : formattedInteger;
-  }
+        if (bnBalance.isZero()) {
+          return ZERO;
+        }
 
-  // Special case: Check if all displayable digits would be zero
-  // This handles very small amounts like 0.00001 when digits=4
-  const shownDecimalsAreZero =
-    digits >= 1 &&
-    digits <= decimalPart.length &&
-    LocalBigNumber(decimalPart.substring(0, digits)).isZero();
+        const balance = bnBalance.toString(10);
+        const [integerPart, decimalPart] = balance.split('.');
 
-  let formattedBalance: string;
+        // Handle case where there's no decimal part (pure integers)
+        if (!decimalPart) {
+          if (showLastNonZeroDecimal) {
+            // For integers with showLastNonZeroDecimal=true, don't show decimals
+            return addCommas
+              ? LocalBigNumber(integerPart).toFormat(0)
+              : integerPart;
+          } else {
+            // For showLastNonZeroDecimal=false, don't show decimals for pure integers
+            return addCommas
+              ? LocalBigNumber(integerPart).toFormat(0)
+              : integerPart;
+          }
+        }
 
-  if (shownDecimalsAreZero) {
-    // Handle edge cases where significant digits are beyond display precision
-    const integerPartZero = LocalBigNumber(integerPart).isZero();
+        const bNdecimalPart = LocalBigNumber(decimalPart);
 
-    if (!integerPartZero) {
-      // Case: "X.00000..." - non-zero integer with insignificant decimals
-      const zeros = Array(digits).fill(0).join('');
-      formattedBalance = addCommas
-        ? LocalBigNumber(`${integerPart}.${zeros}`).toFormat(digits)
-        : `${integerPart}.${zeros}`;
-    } else if (showIsLessThanDecimalsLabel) {
-      // Case: Very small amount with less-than label - show "<0.0001"
-      const zeroPlaceholders = Array(digits - 1).fill(0);
-      const minAmount = [...zeroPlaceholders, 1].join('');
-      formattedBalance = `<0.${minAmount}`;
-    } else if (!showLastNonZeroDecimal) {
-      // Case: showLastNonZeroDecimal=false - pad to exactly digits places
-      const zeros = Array(digits).fill(0).join('');
-      formattedBalance = addCommas
-        ? LocalBigNumber(`0.${zeros}`).toFormat(digits)
-        : `0.${zeros}`;
-    } else {
-      // Case: showLastNonZeroDecimal=true - always pad to at least digits places when decimals exist
-      const trimmedDecimal = decimalPart.replace(/0+$/, '');
-      const finalDecimal =
-        trimmedDecimal.length >= digits
-          ? trimmedDecimal
-          : trimmedDecimal +
-            Array(digits - trimmedDecimal.length)
-              .fill(0)
-              .join('');
+        // Handle case where decimal part is all zeros
+        if (bNdecimalPart.isZero()) {
+          if (showLastNonZeroDecimal) {
+            // For integers with showLastNonZeroDecimal=true, don't show decimals
+            return addCommas
+              ? LocalBigNumber(integerPart).toFormat(0)
+              : integerPart;
+          } else {
+            // For showLastNonZeroDecimal=false, don't show decimals for effectively integer values
+            return addCommas
+              ? LocalBigNumber(integerPart).toFormat(0)
+              : integerPart;
+          }
+        }
 
-      formattedBalance = addCommas
-        ? LocalBigNumber(`0.${finalDecimal}`).toFormat()
-        : `0.${finalDecimal}`;
-    }
-  } else {
-    // Normal case: we have significant digits within the display precision
-    const trimmedDecimal = decimalPart.replace(/0+$/, '');
+        // Find the last non-zero decimal position
+        const lastNonZeroIndex = decimalPart
+          .split('')
+          .reverse()
+          .findIndex((digit) => digit !== '0');
+        const actualDecimalPlaces = decimalPart.length - lastNonZeroIndex;
 
-    if (showLastNonZeroDecimal) {
-      // Always pad to at least `digits` places when decimals exist
-      // If more decimals than digits, show them all
-      const finalDecimal =
-        trimmedDecimal.length >= digits
-          ? trimmedDecimal
-          : trimmedDecimal +
-            Array(digits - trimmedDecimal.length)
-              .fill(0)
-              .join('');
+        let finalDecimalPlaces;
+        if (showLastNonZeroDecimal) {
+          // Show all decimals if more than digits, otherwise show only the actual non-zero decimals
+          finalDecimalPlaces = Math.max(actualDecimalPlaces, 0);
+        } else {
+          // Show exactly digits decimal places
+          finalDecimalPlaces = digits;
+        }
 
-      formattedBalance = addCommas
-        ? LocalBigNumber(`${integerPart}.${finalDecimal}`).toFormat()
-        : `${integerPart}.${finalDecimal}`;
-    } else {
-      // Always pad to exactly `digits` places when decimals exist
-      // Truncate if more decimals than digits
-      let processedDecimal = decimalPart.substring(0, digits);
-      const paddingNeeded = digits - processedDecimal.length;
-      if (paddingNeeded > 0) {
-        processedDecimal += Array(paddingNeeded).fill(0).join('');
-      }
-      formattedBalance = addCommas
-        ? LocalBigNumber(`${integerPart}.${processedDecimal}`).toFormat(digits)
-        : `${integerPart}.${processedDecimal}`;
-    }
-  }
+        // Handle special case: very small amounts that would round to zero
+        const shownDecimalsAreZero =
+          digits >= 1 &&
+          digits <= decimalPart.length &&
+          bNdecimalPart.isGreaterThan(0) &&
+          LocalBigNumber(decimalPart.substring(0, digits)).isZero();
 
-  return isNegative ? `-${formattedBalance}` : formattedBalance;
+        if (shownDecimalsAreZero) {
+          const integerPartZero = LocalBigNumber(integerPart).isZero();
+          const zeroPlaceholders = new Array(digits - 1).fill(0);
+          const zeros = [...zeroPlaceholders, 0].join('');
+          const minAmount = [...zeroPlaceholders, 1].join(''); // 00..1
+
+          if (!integerPartZero) {
+            const intFormat = addCommas
+              ? LocalBigNumber(integerPart).toFormat(0)
+              : integerPart;
+            return `${intFormat}.${zeros}`;
+          }
+
+          if (showIsLessThanDecimalsLabel) {
+            const intFormat = addCommas
+              ? LocalBigNumber(integerPart).toFormat(0)
+              : integerPart;
+            return `<${intFormat}.${minAmount}`;
+          }
+
+          if (!showLastNonZeroDecimal) {
+            return addCommas
+              ? LocalBigNumber(integerPart).toFormat(0)
+              : integerPart;
+          }
+
+          // For showLastNonZeroDecimal=true, show the actual decimals
+          const formattedValue = bnBalance.toFixed(finalDecimalPlaces);
+          const [, formattedDecimalPart] = formattedValue.split('.');
+          const intFormat = addCommas
+            ? LocalBigNumber(integerPart).toFormat(0)
+            : integerPart;
+          return `${intFormat}.${formattedDecimalPart}`;
+        }
+
+        // Normal case: format with the calculated decimal places
+        let formattedValue;
+
+        if (showLastNonZeroDecimal) {
+          // Show actual decimal places without padding for showLastNonZeroDecimal=true
+          formattedValue = bnBalance.toFixed(actualDecimalPlaces);
+        } else {
+          // Show exactly digits decimal places for showLastNonZeroDecimal=false
+          formattedValue = bnBalance.toFixed(digits);
+        }
+
+        // Apply comma formatting if requested
+        if (addCommas) {
+          const [intPart, decPart] = formattedValue.split('.');
+          const formattedIntPart = LocalBigNumber(intPart).toFormat(0);
+          formattedValue = decPart
+            ? `${formattedIntPart}.${decPart}`
+            : formattedIntPart;
+        }
+
+        return formattedValue;
+      })
+      .if(isNegative)
+      .then((current) => `-${current}`)
+      .valueOf()
+  );
 }
