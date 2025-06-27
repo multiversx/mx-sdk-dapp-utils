@@ -6,7 +6,7 @@ import { stringIsInteger } from './stringIsInteger';
 /**
  * Configuration options for formatting blockchain token amounts.
  */
-export interface FormatAmountProps {
+export interface FormatAmountPropsType {
   /**
    * The raw integer amount (string) in the smallest token unit.
    * Must be a valid integer string (no decimals, may include leading "-").
@@ -90,9 +90,6 @@ export interface FormatAmountProps {
   showLastNonZeroDecimal?: boolean;
 }
 
-// Maintain backward compatibility
-export interface FormatAmountPropsType extends FormatAmountProps {}
-
 /**
  * Formats blockchain token amounts from their smallest unit representation
  * to human-readable decimal format with configurable precision and formatting options.
@@ -152,7 +149,7 @@ export function formatAmount({
   addCommas = false,
   showIsLessThanDecimalsLabel = false,
   showLastNonZeroDecimal = true
-}: FormatAmountProps) {
+}: FormatAmountPropsType) {
   if (!stringIsInteger(input, false)) {
     throw new Error('Invalid input');
   }
