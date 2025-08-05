@@ -9,7 +9,7 @@ importers:
   .:
     devDependencies:
       '@multiversx/sdk-core':
-        specifier: ^15.x
+        specifier: ^14.0.0 || ^15.0.0
         version: 15.0.0(bignumber.js@9.3.1)(protobufjs@7.5.3)
       '@swc/core':
         specifier: ^1.4.17
