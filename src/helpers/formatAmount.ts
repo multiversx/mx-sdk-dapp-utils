@@ -1,4 +1,3 @@
-import { TokenTransfer } from '@multiversx/sdk-core';
 import BigNumber from 'bignumber.js';
 import { DECIMALS, DIGITS, ZERO } from '../constants';
 import { stringIsInteger } from './stringIsInteger';
@@ -183,11 +182,13 @@ export function formatAmount({
   return (
     pipe(modInput as string)
       // format
-      .then(() =>
-        TokenTransfer.fungibleFromBigInteger('', modInput as string, decimals)
-          .amountAsBigInteger.shiftedBy(-decimals)
-          .toFixed(decimals)
-      )
+      .then(() => {
+        const amountBN = new LocalBigNumber(modInput);
+        const divisor = new LocalBigNumber(10).pow(decimals);
+        const result = amountBN.dividedBy(divisor);
+
+        return result.toFixed(decimals);
+      })
       // format
       .then((current) => {
         const bnBalance = LocalBigNumber(current);

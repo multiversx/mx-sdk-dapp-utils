@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [[v3.0.0]](https://github.com/multiversx/mx-sdk-dapp-utils/pull/23) - 2025-08-05
+
+- [Migrate to sdk-core v15](https://github.com/multiversx/mx-sdk-dapp-utils/pull/22)
+
 ## [[v2.0.2]](https://github.com/multiversx/mx-sdk-dapp-utils/pull/21) - 2025-06-27
 
 - [Refactor formatAmount function and update tests for improved input handling](https://github.com/multiversx/mx-sdk-dapp-utils/pull/20)
