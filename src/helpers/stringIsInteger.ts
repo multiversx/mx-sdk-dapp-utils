@@ -9,8 +9,12 @@ export const stringIsInteger = (
     return false;
   }
   const bNparsed = new BigNumber(stringInteger);
-  const limit = positiveNumbersOnly ? 0 : -1;
-  return (
-    bNparsed.toString(10) === stringInteger && bNparsed.comparedTo(0) >= limit
-  );
+  if (positiveNumbersOnly) {
+    return (
+      bNparsed.toString(10) === stringInteger &&
+      bNparsed.isGreaterThanOrEqualTo(0)
+    );
+  }
+
+  return bNparsed.toString(10) === stringInteger;
 };

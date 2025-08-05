@@ -2,23 +2,45 @@ name: Build and Test
 
 on:
   pull_request:
-    branches: [ main ]
+    branches: [main]
   workflow_dispatch:
 
 jobs:
-  build:
+  publish-npm:
     runs-on: ubuntu-latest
-
-    strategy:
-      matrix:
-        node-version: [18.x]
-
     steps:
-    - uses: actions/checkout@v2
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v1
-      with:
-        node-version: ${{ matrix.node-version }}
-    - run: npm ci
-    - run: npm run compile
-    - run: npm run test
+      - name: Fix permissions
+        run: |
+          sudo chown -R $USER:$USER ${{ github.workspace }}
+          sudo chmod -R 755 ${{ github.workspace }}
+        continue-on-error: true
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref }}
+          clean: true
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+      - name: Setup pnpm
+        run: npm install -g pnpm
+      - name: Get node_modules cache
+        uses: actions/cache@v4
+        id: node_modules
+        with:
+          path: |
+            **/node_modules
+          key: ${{ runner.os }}-node_modules-${{ hashFiles('**/pnpm-lock.yaml') }}
+      - name: Remove node_modules
+        if: steps.node_modules.outputs.cache-hit != 'true'
+        run: rm -rf node_modules
+      - name: Install Dependencies
+        uses: nick-fields/retry@v3
+        if: steps.node_modules.outputs.cache-hit != 'true'
+        with:
+          timeout_minutes: 120
+          retry_on: error
+          max_attempts: 3
+          command: pnpm install
+      - run: npm run compile
+      - run: npm run test
