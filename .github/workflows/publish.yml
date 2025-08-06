@@ -30,24 +30,10 @@ jobs:
           registry-url: https://registry.npmjs.org/
       - name: Setup pnpm
         run: npm install -g pnpm
-      - name: Get node_modules cache
-        uses: actions/cache@v4
-        id: node_modules
-        with:
-          path: |
-            **/node_modules
-          key: ${{ runner.os }}-node_modules-${{ hashFiles('**/pnpm-lock.yaml') }}
       - name: Remove node_modules
-        if: steps.node_modules.outputs.cache-hit != 'true'
         run: rm -rf node_modules
       - name: Install Dependencies
-        uses: nick-fields/retry@v3
-        if: steps.node_modules.outputs.cache-hit != 'true'
-        with:
-          timeout_minutes: 120
-          retry_on: error
-          max_attempts: 3
-          command: pnpm install
+        run: pnpm install
       - name: Create release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
