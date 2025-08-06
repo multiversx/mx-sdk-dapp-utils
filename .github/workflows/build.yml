@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  publish-npm:
+  build:
     runs-on: ubuntu-latest
     steps:
       - name: Fix permissions
