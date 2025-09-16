@@ -2,11 +2,11 @@ name: Build and Test
 
 on:
   pull_request:
-    branches: [main]
+    branches: [main, development]
   workflow_dispatch:
 
 jobs:
-  publish-npm:
+  build:
     runs-on: ubuntu-latest
     steps:
       - name: Fix permissions
@@ -24,23 +24,9 @@ jobs:
           node-version: 18
       - name: Setup pnpm
         run: npm install -g pnpm
-      - name: Get node_modules cache
-        uses: actions/cache@v4
-        id: node_modules
-        with:
-          path: |
-            **/node_modules
-          key: ${{ runner.os }}-node_modules-${{ hashFiles('**/pnpm-lock.yaml') }}
       - name: Remove node_modules
-        if: steps.node_modules.outputs.cache-hit != 'true'
         run: rm -rf node_modules
       - name: Install Dependencies
-        uses: nick-fields/retry@v3
-        if: steps.node_modules.outputs.cache-hit != 'true'
-        with:
-          timeout_minutes: 120
-          retry_on: error
-          max_attempts: 3
-          command: pnpm install
-      - run: npm run compile
-      - run: npm run test
+        run: pnpm install
+      - run: pnpm run compile
+      - run: pnpm run test
