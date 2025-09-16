@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [[v3.0.2]](https://github.com/multiversx/mx-sdk-dapp-utils/pull/27) - 2025-09-16
+
+- [Refactored parseAmount to mimic sdk-core v.14 implementation](https://github.com/multiversx/mx-sdk-dapp-utils/pull/26)
+
 ## [[v3.0.1]](https://github.com/multiversx/mx-sdk-dapp-utils/pull/25) - 2025-08-05
 
 - [Migrate to sdk-core v15](https://github.com/multiversx/mx-sdk-dapp-utils/pull/22)
