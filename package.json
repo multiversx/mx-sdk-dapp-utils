@@ -1,15 +1,63 @@
 {
   "name": "@multiversx/sdk-dapp-utils",
-  "version": "3.0.2",
+  "version": "3.1.0-alpha-0",
   "description": "SDK for DApp utilities",
-  "main": "out/index.js",
-  "types": "out/index.d.js",
+  "main": "./out/index.js",
+  "module": "./out/esm/index.js",
+  "types": "./out/index.d.ts",
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "types": "./out/index.d.ts",
+      "import": "./out/esm/index.js",
+      "require": "./out/index.js"
+    },
+    "./out": {
+      "types": "./out/index.d.ts",
+      "import": "./out/esm/index.js",
+      "require": "./out/index.js"
+    },
+    "./out/constants": {
+      "types": "./out/constants/index.d.ts",
+      "import": "./out/esm/constants/index.js",
+      "require": "./out/constants/index.js"
+    },
+    "./out/helpers": {
+      "types": "./out/helpers/index.d.ts",
+      "import": "./out/esm/helpers/index.js",
+      "require": "./out/helpers/index.js"
+    },
+    "./out/enums": {
+      "types": "./out/enums/index.d.ts",
+      "import": "./out/esm/enums/index.js",
+      "require": "./out/enums/index.js"
+    },
+    "./out/models": {
+      "types": "./out/models/index.d.ts",
+      "import": "./out/esm/models/index.js",
+      "require": "./out/models/index.js"
+    },
+    "./out/types": {
+      "types": "./out/types/index.d.ts",
+      "import": "./out/esm/types/index.js",
+      "require": "./out/types/index.js"
+    },
+    "./out/*": {
+      "types": "./out/*.d.ts",
+      "import": "./out/esm/*.js",
+      "require": "./out/*.js"
+    },
+    "./package.json": "./package.json"
+  },
   "files": [
     "out/**/*"
   ],
   "scripts": {
     "publish-verdaccio": "npm unpublish --registry http://localhost:4873 @multiversx/sdk-dapp-utils@3.0.0 && rm -rf out && yarn compile && npm publish --registry http://localhost:4873",
-    "compile": "tsc -p tsconfig.json",
+    "clean-out": "node -e \"require('fs').rmSync('out',{recursive:true,force:true})\"",
+    "build:cjs": "tsc -p tsconfig.cjs.json",
+    "build:esm": "tsc -p tsconfig.esm.json && node scripts/write-esm-package-json.js",
+    "compile": "npm run clean-out && npm run build:cjs && npm run build:esm",
     "pretest": "npm run compile",
     "prepare": "npm run compile",
     "test": "jest"

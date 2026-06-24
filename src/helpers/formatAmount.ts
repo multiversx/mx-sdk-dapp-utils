@@ -1,7 +1,7 @@
 import BigNumber from 'bignumber.js';
-import { DECIMALS, DIGITS, ZERO } from '../constants';
-import { stringIsInteger } from './stringIsInteger';
-import { pipe } from './pipe';
+import { DECIMALS, DIGITS, ZERO } from '../constants/index.js';
+import { stringIsInteger } from './stringIsInteger.js';
+import { pipe } from './pipe.js';
 
 /**
  * Configuration options for formatting blockchain token amounts.
