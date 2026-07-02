@@ -1,1 +1,1 @@
-export * from "./dappProviderBase";
+export * from "./dappProviderBase.js";

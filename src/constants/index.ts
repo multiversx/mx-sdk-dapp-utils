@@ -1,2 +1,2 @@
-export * from "./browserConstants";
-export * from './dappConstants';
+export * from "./browserConstants.js";
+export * from './dappConstants.js';

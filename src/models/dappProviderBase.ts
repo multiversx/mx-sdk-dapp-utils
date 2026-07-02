@@ -1,5 +1,5 @@
 import type { Transaction, Message } from "@multiversx/sdk-core";
-import type { Nullable } from "../types";
+import type { Nullable } from "../types/index.js";
 
 export interface IDAppProviderOptions {
   [key: PropertyKey]: unknown;

@@ -1,0 +1,4 @@
+allowBuilds:
+  '@swc/core': false
+  keccak: false
+  protobufjs: false

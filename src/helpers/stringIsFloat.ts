@@ -1,5 +1,5 @@
 import BigNumber from 'bignumber.js';
-import { ZERO } from '../constants';
+import { ZERO } from '../constants/index.js';
 
 export const stringIsFloat = (amount: string) => {
   if (isNaN(amount as any)) {
