@@ -5,6 +5,11 @@ module.exports = {
   moduleDirectories: ['node_modules', 'src'],
   modulePaths: ['<rootDir>/src'],
   roots: ['<rootDir>/src'],
+  // Source uses explicit .js extensions on relative imports (for native-Node ESM
+  // output), but the on-disk source is .ts — strip the extension so Jest resolves it.
+  moduleNameMapper: {
+    '^(\\.{1,2}/.*)\\.js$': '$1'
+  },
   transform: {
     '^.+\\.(ts|js|tsx|jsx)$': ['@swc/jest']
   },
