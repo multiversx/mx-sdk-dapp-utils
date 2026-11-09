@@ -1,3 +1,4 @@
+import BigNumber from 'bignumber.js';
 import { parseAmount } from '../parseAmount';
 
 describe('parseAmount tests', () => {
@@ -18,5 +19,16 @@ describe('parseAmount tests', () => {
   });
   it('works with prepended 0', () => {
     expect(parseAmount('010')).toBe('10000000000000000000');
+  });
+
+  it('is not affected by the global BigNumber config', () => {
+    const { ROUNDING_MODE } = BigNumber.config();
+    BigNumber.config({ ROUNDING_MODE: BigNumber.ROUND_UP });
+
+    try {
+      expect(parseAmount('0.0000000000000000011')).toBe('1');
+    } finally {
+      BigNumber.config({ ROUNDING_MODE });
+    }
   });
 });

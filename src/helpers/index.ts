@@ -1,6 +1,7 @@
 export * from './formatAmount.js';
 export * from './isWindowAvailable.js';
 export * from './parseAmount.js';
+export * from './parseAmountStrict.js';
 export * from './pipe.js';
 export * from './providerNotInitializedError.js';
 export * from './recommendGasPrice.js';

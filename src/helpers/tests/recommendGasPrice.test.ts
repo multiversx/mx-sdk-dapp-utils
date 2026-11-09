@@ -96,4 +96,22 @@ describe('recommendGasPrice', () => {
       expect(result).toBe(MIN_GAS_PRICE);
     });
   });
+
+  describe('when params are not finite numbers', () => {
+    it('should return MIN_GAS_PRICE instead of NaN', () => {
+      const base = {
+        transactionDataLength: 0,
+        transactionGasLimit: 50_000,
+        ppu: 1_000_000_000
+      };
+
+      expect(recommendGasPrice({ ...base, transactionDataLength: NaN })).toBe(
+        MIN_GAS_PRICE
+      );
+      expect(recommendGasPrice({ ...base, transactionGasLimit: NaN })).toBe(
+        MIN_GAS_PRICE
+      );
+      expect(recommendGasPrice({ ...base, ppu: Infinity })).toBe(MIN_GAS_PRICE);
+    });
+  });
 });
