@@ -5,6 +5,9 @@ on:
     branches: [main, development]
   workflow_dispatch:
 
+permissions:
+  contents: read
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -16,17 +19,16 @@ jobs:
         continue-on-error: true
       - uses: actions/checkout@v6
         with:
-          ref: ${{ github.ref }}
-          clean: true
+          persist-credentials: false
       - name: Set up Node.js
         uses: actions/setup-node@v6
         with:
           node-version: 24
       - name: Setup pnpm
-        run: npm install -g pnpm
+        run: npm install -g pnpm@11.11.0
       - name: Remove node_modules
         run: rm -rf node_modules
       - name: Install Dependencies
-        run: pnpm install
+        run: pnpm install --frozen-lockfile
       - run: pnpm run compile
       - run: pnpm run test

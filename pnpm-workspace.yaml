@@ -1,4 +1,5 @@
 allowBuilds:
+  '@parcel/watcher': false
   '@swc/core': false
   keccak: false
   protobufjs: false
