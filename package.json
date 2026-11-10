@@ -1,7 +1,11 @@
 {
   "name": "@multiversx/sdk-dapp-utils",
-  "version": "3.1.0",
-  "description": "SDK for DApp utilities",
+  "version": "3.2.0",
+  "description": "SDK for dApp Utilities",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/multiversx/mx-sdk-dapp-utils.git"
+  },
   "main": "./out/index.js",
   "module": "./out/esm/index.js",
   "types": "./out/index.d.ts",
@@ -53,7 +57,7 @@
     "out/**/*"
   ],
   "scripts": {
-    "publish-verdaccio": "npm unpublish --registry http://localhost:4873 @multiversx/sdk-dapp-utils@3.0.0 && rm -rf out && yarn compile && npm publish --registry http://localhost:4873",
+    "publish-verdaccio": "npm unpublish --registry http://localhost:4873 @multiversx/sdk-dapp-utils@$npm_package_version; npm publish --registry http://localhost:4873",
     "clean-out": "node -e \"require('fs').rmSync('out',{recursive:true,force:true})\"",
     "build:cjs": "tsc -p tsconfig.cjs.json",
     "build:esm": "tsc -p tsconfig.esm.json && node scripts/write-esm-package-json.js",
@@ -65,18 +69,18 @@
   "author": "MultiversX",
   "license": "GPL-3.0-or-later",
   "devDependencies": {
-    "@multiversx/sdk-core": "^14.0.0 || ^15.0.0",
-    "@swc/core": "^1.4.17",
-    "@swc/jest": "^0.2.36",
-    "@types/jest": "29.5.13",
-    "bignumber.js": "^9.x",
-    "jest": "29.7.0",
-    "jest-environment-jsdom": "29.7.0",
-    "prettier": "3.4.2",
-    "typescript": "5.4.3"
+    "@multiversx/sdk-core": "^16.0.0",
+    "@swc/core": "^1.16.22",
+    "@swc/jest": "^0.2.39",
+    "@types/jest": "30.0.0",
+    "bignumber.js": "^9.3.1",
+    "jest": "30.5.2",
+    "jest-environment-jsdom": "30.5.2",
+    "prettier": "3.9.10",
+    "typescript": "7.0.2"
   },
   "peerDependencies": {
-    "@multiversx/sdk-core": "^14.0.0 || ^15.0.0",
+    "@multiversx/sdk-core": "^14.0.0 || ^15.0.0 || ^16.0.0",
     "bignumber.js": "^9.x"
   }
 }

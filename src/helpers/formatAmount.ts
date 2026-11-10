@@ -107,6 +107,7 @@ export interface FormatAmountPropsType {
  * @returns Formatted string representation of the amount
  *
  * @throws {Error} When input is not a valid integer string
+ * @throws {Error} When decimals or digits is not a non-negative integer
  *
  * @example
  * // Basic usage - 1.5 EGLD
@@ -167,6 +168,14 @@ export function formatAmount({
 }: FormatAmountPropsType) {
   if (!stringIsInteger(input, false)) {
     throw new Error('Invalid input');
+  }
+
+  if (!Number.isInteger(decimals) || decimals < 0) {
+    throw new Error('Invalid decimals');
+  }
+
+  if (!Number.isInteger(digits) || digits < 0) {
+    throw new Error('Invalid digits');
   }
 
   const LocalBigNumber = BigNumber.clone();
@@ -261,14 +270,15 @@ export function formatAmount({
           const zeros = [...zeroPlaceholders, 0].join('');
           const minAmount = [...zeroPlaceholders, 1].join(''); // 00..1
 
-          if (!integerPartZero) {
+          if (!integerPartZero && !showLastNonZeroDecimal) {
             const intFormat = addCommas
               ? LocalBigNumber(integerPart).toFormat(0)
               : integerPart;
             return `${intFormat}.${zeros}`;
           }
 
-          if (showIsLessThanDecimalsLabel) {
+          // The less-than label only makes sense for amounts below 1 unit
+          if (integerPartZero && showIsLessThanDecimalsLabel) {
             const intFormat = addCommas
               ? LocalBigNumber(integerPart).toFormat(0)
               : integerPart;

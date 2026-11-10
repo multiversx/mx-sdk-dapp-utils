@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [[v3.2.0]](https://github.com/multiversx/mx-sdk-dapp-utils/pull/31) - 2026-11-09
+
+- [Update build, harden format/parseAmount](https://github.com/multiversx/mx-sdk-dapp-utils/pull/30)
+
 ## [[v3.1.0]](https://github.com/multiversx/mx-sdk-dapp-utils/pull/29) - 2026-07-02
 
 - [Ship native Node ESM](https://github.com/multiversx/mx-sdk-dapp-utils/pull/28)

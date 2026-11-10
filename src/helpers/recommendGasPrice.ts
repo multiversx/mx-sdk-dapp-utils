@@ -18,7 +18,13 @@ export function recommendGasPrice({
   const GAS_PRICE_FALLBACK = MIN_GAS_PRICE;
   const MAX_GAS_PRICE = MIN_GAS_PRICE * 30;
 
-  if (!ppu) {
+  const hasValidParams = [
+    transactionDataLength,
+    transactionGasLimit,
+    ppu
+  ].every(Number.isFinite);
+
+  if (!ppu || !hasValidParams) {
     return GAS_PRICE_FALLBACK;
   }
 

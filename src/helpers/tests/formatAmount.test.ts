@@ -271,4 +271,53 @@ describe('formatAmount', () => {
       })
     ).toBe('1.230000');
   });
+
+  it('should throw for invalid decimals or digits', () => {
+    const input = '1000000000000000000';
+
+    expect(() => formatAmount({ input, decimals: -2 })).toThrow(
+      'Invalid decimals'
+    );
+    expect(() => formatAmount({ input, decimals: 1.5 })).toThrow(
+      'Invalid decimals'
+    );
+    expect(() => formatAmount({ input, decimals: NaN })).toThrow(
+      'Invalid decimals'
+    );
+    expect(() => formatAmount({ input, digits: -1 })).toThrow('Invalid digits');
+    expect(() => formatAmount({ input, digits: 2.5 })).toThrow(
+      'Invalid digits'
+    );
+    expect(() => formatAmount({ input, digits: 0 })).not.toThrow();
+  });
+
+  it('should not hide decimals when the first digits decimals are zero and showLastNonZeroDecimal=true', () => {
+    // 1.0000005 EGLD with digits=4
+    expect(formatAmount({ input: '1000000500000000000', digits: 4 })).toBe(
+      '1.0000005'
+    );
+    expect(
+      formatAmount({
+        input: '1000000500000000000',
+        digits: 4,
+        showLastNonZeroDecimal: false
+      })
+    ).toBe('1.0000');
+
+    // 3634.06 with 2 decimals, digits=1
+    expect(
+      formatAmount({ input: '363406', decimals: 2, digits: 1, addCommas: true })
+    ).toBe('3,634.06');
+
+    // the less-than label is only for amounts below 1
+    expect(
+      formatAmount({
+        input: '1000000500000000000',
+        showIsLessThanDecimalsLabel: true
+      })
+    ).toBe('1.0000005');
+    expect(formatAmount({ input: '-1000000500000000000', digits: 4 })).toBe(
+      '-1.0000005'
+    );
+  });
 });
